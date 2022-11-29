@@ -1,5 +1,11 @@
 {
     "type": "MOD",
+    "name": "m",
     "title": "m",
-    "short_description": "shortcuts for ad-hoc scripting"
+    "short_description": "shortcuts for ad-hoc scripting",
+    "repo": "https://github.com/fluxionary/minetest-m.git",
+    "website": "https://github.com/fluxionary/minetest-m",
+    "issue_tracker": "https://github.com/fluxionary/minetest-m/issues",
+    "license": "AGPL-3.0-or-later",
+    "media_license": "CC-BY-SA-4.0"
 }
