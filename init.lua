@@ -5,19 +5,19 @@ m = setmetatable({
 }, {
 	__index = function(t, k)
 		if t == "cs" then
-			return minetest.registered_craftitems
+			return ipairs(minetest.registered_craftitems)
 		elseif t == "ns" then
-			return minetest.registered_nodes
+			return ipairs(minetest.registered_nodes)
 		elseif t == "ts" then
-			return minetest.registered_tools
+			return ipairs(minetest.registered_tools)
 		elseif t == "is" then
-			return minetest.registered_items
+			return ipairs(minetest.registered_items)
 		elseif t == "ps" then
-			return minetest.get_connected_players()
+			return ipairs(minetest.get_connected_players())
 		elseif t == "es" then
-			return minetest.luaentities
+			return pairs(minetest.luaentities)
 		elseif t == "os" then
-			return minetest.object_refs
+			return pairs(minetest.object_refs)
 		end
 
 		return minetest[k]
@@ -25,7 +25,11 @@ m = setmetatable({
 })
 
 m.F = minetest.formspec_escape
-m.s = tostring
+m.d = dump
+
+function m.s(key)
+	return minetest.settings:get(key)
+end
 
 function m.t(who, what, ...)
 	if type(who) == "userdata" then
@@ -37,6 +41,10 @@ end
 
 function m.ta(what, ...)
 	minetest.chat_send_all(f(what, ...))
+end
+
+function m.pd(o)
+	print(dump(o))
 end
 
 m.p = setmetatable({}, {
@@ -75,7 +83,13 @@ m.has = setmetatable({}, {
 	end,
 })
 
-m.oia = minetest.get_objects_in_area
+function m.oia(...)
+	return ipairs(minetest.get_objects_in_area(...))
+end
+
+function m.oir(...)
+	return ipairs(minetest.get_objects_inside_radius(...))
+end
 
 m.p2s = minetest.pos_to_string
 m.s2p = minetest.string_to_pos
@@ -114,6 +128,20 @@ if m.has.worldedit then
 			return worldedit.pos2[n]
 		end,
 	})
+
+	m.ips = setmetatable({}, {
+		__index = function(t, n)
+			local minp, maxp = vector.sort(worldedit.pos1[n], worldedit.pos2[n])
+			local va = VoxelArea:new({ MinEdge = minp, MaxEdge = maxp })
+			local i = va:iterp(minp, maxp)
+			return function()
+				local next = i()
+				if next then
+					return va:position(next)
+				end
+			end
+		end,
+	})
 end
 
 function m.gn(pos)
@@ -128,11 +156,4 @@ end
 
 function m.ae(pos, name)
 	return minetest.add_entity(pos, name)
-end
-
-function m.pd(o)
-	print(dump(o))
-end
-function m.csa(fmt, ...)
-	return minetest.chat_send_all(f(fmt, ...))
 end
