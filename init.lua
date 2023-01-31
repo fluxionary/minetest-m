@@ -5,27 +5,59 @@ m = setmetatable({
 }, {
 	__index = function(t, k)
 		if t == "cs" then
-			return ipairs(minetest.registered_craftitems)
+			return m.iter(minetest.registered_craftitems)
 		elseif t == "ns" then
-			return ipairs(minetest.registered_nodes)
+			return m.iter(minetest.registered_nodes)
 		elseif t == "ts" then
-			return ipairs(minetest.registered_tools)
+			return m.iter(minetest.registered_tools)
 		elseif t == "is" then
-			return ipairs(minetest.registered_items)
+			return m.iter(minetest.registered_items)
 		elseif t == "ps" then
-			return ipairs(minetest.get_connected_players())
+			return m.iter(minetest.get_connected_players())
 		elseif t == "es" then
-			return pairs(minetest.luaentities)
+			return m.iter_values(minetest.luaentities)
 		elseif t == "os" then
-			return pairs(minetest.object_refs)
+			return m.iter_values(minetest.object_refs)
 		end
 
 		return minetest[k]
 	end,
 })
 
+function m.iter(t)
+	local i = 0
+	return function()
+		i = i + 1
+		return t[i]
+	end
+end
+
+function m.iter_values(t)
+	local p = pairs(t)
+	return function()
+		local _, v = p()
+		return v
+	end
+end
+
+m.v = vector.new
+
 m.F = minetest.formspec_escape
 m.d = dump
+
+m.p2s = minetest.pos_to_string
+m.s2p = minetest.string_to_pos
+
+m.sn = minetest.set_node
+m.xn = minetest.swap_node
+m.ae = minetest.add_entity
+
+m.gn = minetest.get_node
+m.gm = minetest.get_meta
+
+m.x1 = m.v(1, 0, 0)
+m.y1 = m.v(0, 1, 0)
+m.z1 = m.v(0, 0, 1)
 
 function m.s(key)
 	return minetest.settings:get(key)
@@ -84,21 +116,12 @@ m.has = setmetatable({}, {
 })
 
 function m.oia(...)
-	return ipairs(minetest.get_objects_in_area(...))
+	return m.iter(minetest.get_objects_in_area(...))
 end
 
 function m.oir(...)
-	return ipairs(minetest.get_objects_inside_radius(...))
+	return m.iter(minetest.get_objects_inside_radius(...))
 end
-
-m.p2s = minetest.pos_to_string
-m.s2p = minetest.string_to_pos
-
-m.v = vector.new
-
-m.x1 = m.v(1, 0, 0)
-m.y1 = m.v(0, 1, 0)
-m.z1 = m.v(0, 0, 1)
 
 function m.up(p, i)
 	if not p or type(p) == "number" then
@@ -144,16 +167,8 @@ if m.has.worldedit then
 	})
 end
 
-function m.gn(pos)
-	return minetest.get_node(pos)
-end
-function m.sn(pos, node)
-	return minetest.set_node(pos, node)
-end
-function m.xn(pos, node)
-	return minetest.swap_node(pos, node)
-end
+local modname = minetest.get_current_modname()
+local modpath = minetest.get_modpath(modname)
 
-function m.ae(pos, name)
-	return minetest.add_entity(pos, name)
-end
+dofile(modpath .. DIR_DELIM .. "we_2_book.lua")
+dofile(modpath .. DIR_DELIM .. "book_2_world.lua")

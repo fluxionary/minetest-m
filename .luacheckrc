@@ -650,6 +650,7 @@ stds.m = {
 		"m",
 	},
 	read_globals = {
+		"futil",
 		"worldedit",
 	},
 }
