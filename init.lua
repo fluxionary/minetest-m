@@ -5,13 +5,13 @@ m = setmetatable({
 }, {
 	__index = function(t, k)
 		if t == "cs" then
-			return m.iter(minetest.registered_craftitems)
+			return pairs(minetest.registered_craftitems)
 		elseif t == "ns" then
-			return m.iter(minetest.registered_nodes)
+			return pairs(minetest.registered_nodes)
 		elseif t == "ts" then
-			return m.iter(minetest.registered_tools)
+			return pairs(minetest.registered_tools)
 		elseif t == "is" then
-			return m.iter(minetest.registered_items)
+			return pairs(minetest.registered_items)
 		elseif t == "ps" then
 			return m.iter(minetest.get_connected_players())
 		elseif t == "es" then
