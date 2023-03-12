@@ -4,19 +4,19 @@ m = setmetatable({
 	f = f,
 }, {
 	__index = function(t, k)
-		if t == "cs" then
+		if k == "cs" then
 			return pairs(minetest.registered_craftitems)
-		elseif t == "ns" then
+		elseif k == "ns" then
 			return pairs(minetest.registered_nodes)
-		elseif t == "ts" then
+		elseif k == "ts" then
 			return pairs(minetest.registered_tools)
-		elseif t == "is" then
+		elseif k == "is" then
 			return pairs(minetest.registered_items)
-		elseif t == "ps" then
+		elseif k == "ps" then
 			return m.iter(minetest.get_connected_players())
-		elseif t == "es" then
+		elseif k == "es" then
 			return m.iter_values(minetest.luaentities)
-		elseif t == "os" then
+		elseif k == "os" then
 			return m.iter_values(minetest.object_refs)
 		end
 
@@ -63,7 +63,7 @@ function m.s(key)
 	return minetest.settings:get(key)
 end
 
-function m.t(who, what, ...)
+function m.tp(who, what, ...)
 	if type(who) == "userdata" then
 		who = who:get_player_name()
 	end
@@ -106,6 +106,12 @@ m.t = setmetatable({}, {
 m.i = setmetatable({}, {
 	__index = function(t, n)
 		return minetest.registered_items[n]
+	end,
+})
+
+m.e = setmetatable({}, {
+	__index = function(t, n)
+		return minetest.registered_entities[n]
 	end,
 })
 
