@@ -648,6 +648,7 @@ stds.minetest = {
 stds.m = {
 	globals = {
 		"m",
+		"dump",
 	},
 	read_globals = {
 		"futil",

@@ -46,6 +46,15 @@ m.v = vector.new
 m.F = minetest.formspec_escape
 m.d = dump
 
+if minetest.get_modpath("futil") then
+	minetest.register_on_mods_loaded(function()
+		if futil.dump then
+			m.d = futil.dump
+			dump = futil.dump
+		end
+	end)
+end
+
 m.p2s = minetest.pos_to_string
 m.s2p = minetest.string_to_pos
 
